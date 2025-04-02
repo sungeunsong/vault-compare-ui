@@ -115,6 +115,8 @@ vault write auth/approle/role/vault-app-role token_policies="transit-policy"
 - 중계 레이어 구성이 추가되어 구조가 복잡해진다.
 - 시스템 설계 및 권한 분리가 필요하다.
 
+![설명](images/vault_agent_gateway.png)
+
 ---
 
 ## 사이드카 방식과 Transit 방식의 보안 비교
