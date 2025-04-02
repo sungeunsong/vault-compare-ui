@@ -66,14 +66,14 @@ app.post("/encrypt", async (req, res) => {
   results.tenantB = await vaultEncryptDecrypt(TRANSIT_KEY_B, inputText);
 
   // 3. Agent 방식 - 파일에서 키 읽기
-  try {
-    const key = fs.readFileSync(AGENT_KEY_PATH, "utf-8").trim();
-    const encrypted = Buffer.from(`${inputText}:${key}`).toString("base64");
-    const decrypted = Buffer.from(encrypted, "base64").toString("utf-8");
-    results.agent = { key, encrypted, decrypted };
-  } catch (e) {
-    results.agent = { error: "Agent key 파일을 읽을 수 없음" };
-  }
+  // try {
+  //   const key = fs.readFileSync(AGENT_KEY_PATH, "utf-8").trim();
+  //   const encrypted = Buffer.from(`${inputText}:${key}`).toString("base64");
+  //   const decrypted = Buffer.from(encrypted, "base64").toString("utf-8");
+  //   results.agent = { key, encrypted, decrypted };
+  // } catch (e) {
+  //   results.agent = { error: "Agent key 파일을 읽을 수 없음" };
+  // }
 
   res.render("index", { results });
 });
