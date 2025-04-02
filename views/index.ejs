@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Vault 암호화 비교</title>
+    <style>
+      body {
+        font-family: sans-serif;
+        margin: 2rem;
+        background: #f9f9f9;
+      }
+      h1 {
+        color: #2c3e50;
+      }
+      form {
+        margin-bottom: 2rem;
+      }
+      input[type="text"] {
+        padding: 0.5rem;
+        width: 300px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+      }
+      button {
+        padding: 0.5rem 1rem;
+        background: #3498db;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+      .block {
+        background: #fff;
+        border-radius: 10px;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        padding: 1rem 2rem;
+        margin-bottom: 2rem;
+      }
+      .title {
+        font-size: 1.2rem;
+        color: #3498db;
+      }
+      pre {
+        background: #f4f4f4;
+        padding: 0.75rem;
+        border-radius: 5px;
+        overflow-x: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>🔐 Vault 암호화 방식 비교</h1>
+
+    <form method="POST" action="/encrypt">
+      <label>암호화할 텍스트 입력: </label>
+      <input type="text" name="text" required />
+      <button type="submit">암호화 실행</button>
+    </form>
+
+    <% if (results) { %>
+
+    <div class="block">
+      <div class="title">🚪 Tenant A (Transit 방식)</div>
+      <% if (results.tenantA && results.tenantA.error) { %>
+      <pre><%= results.tenantA.error %></pre>
+      <% } else { %>
+      <p><strong>암호화 결과:</strong></p>
+      <pre><%= results.tenantA.ciphertext %></pre>
+      <p><strong>복호화 결과:</strong></p>
+      <pre><%= results.tenantA.decrypted %></pre>
+      <% } %>
+    </div>
+
+    <div class="block">
+      <div class="title">🚪 Tenant B (Transit 방식)</div>
+      <% if (results.tenantB && results.tenantB.error) { %>
+      <pre><%= results.tenantB.error %></pre>
+      <% } else { %>
+      <p><strong>암호화 결과:</strong></p>
+      <pre><%= results.tenantB.ciphertext %></pre>
+      <p><strong>복호화 결과:</strong></p>
+      <pre><%= results.tenantB.decrypted %></pre>
+      <% } %>
+    </div>
+
+    <div class="block">
+      <div class="title">📦 Agent 방식 (키 주입)</div>
+      <% if (results.agent && results.agent.error) { %>
+      <pre><%= results.agent.error %></pre>
+      <% } else { %>
+      <p><strong>주입된 키:</strong></p>
+      <pre><%= results.agent.key %></pre>
+      <p><strong>암호화 결과:</strong></p>
+      <pre><%= results.agent.encrypted %></pre>
+      <p><strong>복호화 결과:</strong></p>
+      <pre><%= results.agent.decrypted %></pre>
+      <% } %>
+    </div>
+
+    <% } %>
+  </body>
+</html>
