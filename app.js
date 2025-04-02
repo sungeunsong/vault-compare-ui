@@ -59,5 +59,5 @@ app.post("/encrypt", async (req, res) => {
 });
 
 app.listen(port, () => {
-  console.log(`Vault 비교 앱이 http://localhost:${port} 에서 실행 중입니다.`);
+  console.log(`Vault 앱이 http://localhost:${port} 에서 실행 중입니다.`);
 });
