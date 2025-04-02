@@ -1,0 +1,107 @@
+---
+# ✅ ServiceAccount
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: vault-app
+
+---
+# ✅ ConfigMap: vault-agent-config
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: vault-agent-config
+data:
+  config.hcl: |
+    exit_after_auth = false
+    pid_file = "/tmp/pidfile"
+
+    vault {
+      address = "http://192.168.137.57:8200"
+    }
+
+    auto_auth {
+      method "approle" {
+        mount_path = "auth/approle"
+        config = {
+          role_id_file_path = "/etc/vault/approle/role-id"
+          secret_id_file_path = "/etc/vault/approle/secret-id"
+        }
+      }
+    }
+
+    cache {
+      use_auto_auth_token = true
+    }
+
+    listener "tcp" {
+      address = "127.0.0.1:8200"
+      tls_disable = true
+    }
+
+---
+# ✅ Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vault-compare-ui
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: vault-compare-ui
+  template:
+    metadata:
+      labels:
+        app: vault-compare-ui
+    spec:
+      serviceAccountName: vault-app
+      containers:
+        - name: web
+          image: ghcr.io/sungeunsong/vault-compare-ui:latest
+          ports:
+            - containerPort: 3000
+          env:
+            - name: VAULT_ADDR
+              value: "http://127.0.0.1:8200"
+            - name: TRANSIT_KEY_TENANT_A
+              value: "tenant-a-key"
+            - name: TRANSIT_KEY_TENANT_B
+              value: "tenant-b-key"
+          volumeMounts:
+            - name: vault-approle
+              mountPath: /etc/vault/approle
+              readOnly: true
+
+        - name: vault-agent
+          image: docker.io/hashicorp/vault:1.15.0
+          command: ["vault", "agent", "-config=/etc/vault/config.hcl"]
+          volumeMounts:
+            - name: vault-agent-config
+              mountPath: /etc/vault
+            - name: vault-approle
+              mountPath: /etc/vault/approle
+
+      volumes:
+        - name: vault-agent-config
+          configMap:
+            name: vault-agent-config
+        - name: vault-approle
+          secret:
+            secretName: vault-approle
+
+---
+# ✅ Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: vault-compare-ui
+spec:
+  type: LoadBalancer
+  selector:
+    app: vault-compare-ui
+  ports:
+    - port: 80
+      targetPort: 3000
+
+---
