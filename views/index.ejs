@@ -83,6 +83,18 @@
       <% } %>
     </div>
 
+    <div class="block">
+      <div class="title">🚪 Tenant C (Transit 방식)</div>
+      <% if (results.tenantC && results.tenantC.error) { %>
+      <pre><%= results.tenantC.error %></pre>
+      <% } else { %>
+      <p><strong>암호화 결과:</strong></p>
+      <pre><%= results.tenantC.ciphertext %></pre>
+      <p><strong>복호화 결과:</strong></p>
+      <pre><%= results.tenantC.decrypted %></pre>
+      <% } %>
+    </div>
+
     <!-- <div class="block">
       <div class="title">📦 Agent 방식 (키 주입)</div>
       <% if (results.agent && results.agent.error) { %>

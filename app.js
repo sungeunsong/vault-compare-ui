@@ -16,6 +16,7 @@ app.set("view engine", "ejs");
 const VAULT_ADDR = process.env.VAULT_ADDR;
 const TRANSIT_KEY_A = process.env.TRANSIT_KEY_TENANT_A;
 const TRANSIT_KEY_B = process.env.TRANSIT_KEY_TENANT_B;
+const TRANSIT_KEY_C = process.env.TRANSIT_KEY_TENANT_C;
 
 async function vaultEncryptDecrypt(keyName, plaintext) {
   try {
@@ -52,6 +53,7 @@ app.post("/encrypt", async (req, res) => {
   const results = {
     tenantA: await vaultEncryptDecrypt(TRANSIT_KEY_A, inputText),
     tenantB: await vaultEncryptDecrypt(TRANSIT_KEY_B, inputText),
+    tenantC: await vaultEncryptDecrypt(TRANSIT_KEY_C, inputText),
     agent: { note: "Proxy 모드에선 Agent 키는 사용하지 않음" },
   };
 

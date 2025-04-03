@@ -56,6 +56,7 @@ app.post("/encrypt", async (req, res) => {
   const results = {
     tenantA: { ciphertext: "", decrypted: "", error: "" },
     tenantB: { ciphertext: "", decrypted: "", error: "" },
+    tenantC: { ciphertext: "", decrypted: "", error: "" },
     agent: { key: "", encrypted: "", decrypted: "", error: "" },
   };
 
@@ -64,6 +65,9 @@ app.post("/encrypt", async (req, res) => {
 
   // 2. Transit - tenant B
   results.tenantB = await vaultEncryptDecrypt(TRANSIT_KEY_B, inputText);
+
+  // 3. Transit - tenant C
+  results.tenantC = await vaultEncryptDecrypt(TRANSIT_KEY_C, inputText);
 
   // 3. Agent 방식 - 파일에서 키 읽기
   // try {

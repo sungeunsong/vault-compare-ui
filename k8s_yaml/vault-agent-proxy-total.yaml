@@ -67,6 +67,8 @@ spec:
               value: "tenant-a-key"
             - name: TRANSIT_KEY_TENANT_B
               value: "tenant-b-key"
+            - name: TRANSIT_KEY_TENANT_C
+              value: "tenant-c-key"
 
         - name: vault-agent
           image: docker.io/hashicorp/vault:1.15.0
