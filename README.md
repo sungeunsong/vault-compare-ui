@@ -1,6 +1,29 @@
 # vault-compare-ui
 
-# vault용 앱롤 생성
+# vault에서 k8s 인증 사용시
+
+## 1. Kubernetes Auth 활성화
+
+vault auth enable kubernetes
+
+## 2. JWT, CA, host 정보 입력 (클러스터 내부 접근 주소)
+
+## 이건 crt를 직접 가져오는 방식이다
+
+vault write auth/kubernetes/config \
+ token_reviewer_jwt="$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)" \
+ kubernetes_host="https://192.168.137.203:6443" \
+ kubernetes_ca_cert=@/var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+
+## 3. Vault Role 생성 (ServiceAccount에 매핑)
+
+vault write auth/kubernetes/role/vault-app \
+ bound_service_account_names="vault-auth" \
+ bound_service_account_namespaces="default" \
+ policies="transit-policy" \
+ ttl="24h"
+
+# vault용 앱롤 생성 (앱롤 사용시)
 
 vault auth enable approle
 
